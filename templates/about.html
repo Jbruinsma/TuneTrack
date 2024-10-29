@@ -1,0 +1,29 @@
+{% extends 'base.html'%} {% block title %} About {% endblock %} {% block nav %}
+<nav class="navbar">
+  <ul class="navbar-list">
+    <li class="navbar-item">
+      <a href="/" class="navbar-link">Home</a>
+    </li>
+  </ul>
+</nav>
+{% endblock %} {% block content %}
+<div class="about-content">
+  <p>TuneTrack is a project developed by Justin Bruinsma.</p>
+  <p>
+    This project was developed in order to learn about Web Frameworks. TuneTrack
+    uses Flask.
+  </p>
+  <h3>Contact me:</h3>
+  <ul class="contact-list">
+    <li>justinabruinsma@gmail.com</li>
+    <li>
+      <a
+        href="https://www.linkedin.com/in/justin-bruinsma-669816272?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app"
+        target="_blank"
+        >LinkedIn</a
+      >
+    </li>
+  </ul>
+</div>
+
+{% endblock %}

@@ -1,0 +1,55 @@
+{% extends 'base.html' %} {% block nav %}
+<nav class="navbar">
+  <ul class="navbar-list">
+    <li class="navbar-item">
+      <a href="/about" class="navbar-link">About</a>
+    </li>
+  </ul>
+</nav>
+{% endblock %} {% block content %}
+<div class="main">
+  <div class="playlist-box-container">
+    <!-- Playlist boxes -->
+    {% for playlist in playlists %}
+    <div class="playlist-box-holder">
+      <a href="/playlist/{{ playlists.index(playlist) }}" class="home-playlist-box">
+        <div
+          class="playlist-box"
+        >
+          <img
+            src="{{ url_for('static', filename='uploads/' ~ playlist.image) }}"
+            alt="Playlist Cover Image"
+            class="playlist-image"
+          />
+          <h3>{{ playlist.playlist_name }}</h3>
+        </div>
+      </a>
+    </div>
+    {% endfor %}
+
+    <!-- Add playlist box -->
+    <a href="{{ url_for('create_playlist') }}" class="create-playlist-link">
+      <div class="create-playlist-box">
+        <div class="create-playlist-content">
+          <div class="create-playlist-btn">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="size-6"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M12 4.5v15m7.5-7.5h-15"
+              />
+            </svg>
+          </div>
+        </div>
+      </div>
+    </a>
+  </div>
+</div>
+{% endblock %}

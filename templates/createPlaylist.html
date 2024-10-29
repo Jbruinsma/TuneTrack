@@ -1,0 +1,58 @@
+{% extends 'base.html' %}{% block content %}
+<div class="form-container">
+  <form
+    id="playlistForm"
+    method="POST"
+    action="{{ url_for('create_playlist') }}"
+    enctype="multipart/form-data"
+  >
+    {{ form.hidden_tag() }}
+    <!-- CSRF token for security if using Flask-WTF -->
+
+    <!-- Playlist Image Upload -->
+    <div class="form-group">
+      <label for="playlistImage"></label>
+      <input
+        type="file"
+        name="playlist_image"
+        id="playlistImage"
+        class="form-control"
+        required
+      />
+    </div>
+
+    <!-- Playlist Name Input -->
+    <div class="form-group">
+      <label for="playlistTitle"></label>
+      <input
+        type="text"
+        name="playlist_name"
+        id="playlistTitle"
+        class="form-control"
+        placeholder="Enter playlist name"
+        required
+      />
+    </div>
+
+    <!-- Available Songs (Checkboxes) -->
+    <div class="form-group">
+      <label>Select Songs:</label>
+      {% if available_music %} {% for key, music in available_music.items() %}
+      <div class="music-row">
+        <label>
+          <input type="checkbox" name="selected_music" value="{{ key }}" />
+          {{ music.music_name }} by {{ music.artist }}
+        </label>
+      </div>
+      {% endfor %} {% else %}
+      <p>No music available to select.</p>
+      {% endif %}
+    </div>
+
+    <!-- Submit Button -->
+    <div class="form-group">
+      <button type="submit" class="btn btn-primary">Create Playlist</button>
+    </div>
+  </form>
+</div>
+{% endblock %}

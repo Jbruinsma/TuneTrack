@@ -1,0 +1,58 @@
+{% extends 'base.html' %} {% block nav %}
+<nav class="navbar" id="viewing-playlist-nav">
+  <ul class="navbar-list">
+    <li class="navbar-item">
+      <a href="/" class="navbar-link">Home</a>
+    </li>
+  </ul>
+</nav>
+{% endblock %} {% block content %}
+<div class="playlist-box-holder viewing-playlist">
+  <div class="playlist-box viewing-playlist">
+    <img
+      src="{{ url_for('static', filename='uploads/' + playlist_image) }}"
+      alt="Playlist cover image"
+      class="playlist-image"
+    />
+    <h3>{{ playlist_title }}</h3>
+    <div class="play-shuffle-buttons">
+      <a href="/play/0/{{ playlist_id }}" class="play-button">Play</a>
+      <a href="/shuffle/shuffling/{{ playlist_id }}" class="shuffle-button"
+        >Shuffle</a
+      >
+    </div>
+
+    <div id="song-rows-container">
+      {% for song in music_list %}
+  <div class="song-container" data-name-id="{{ song['music_name'] }} by {{ song['artist'] }}">
+
+    <div class="icon">
+      <a href="/play_specific/{{ loop.index }}/{{ playlist_id }}">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="size-6"
+          id="icon"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.347a1.125 1.125 0 0 1 0 1.972l-11.54 6.347a1.125 1.125 0 0 1-1.667-.986V5.653Z"
+          />
+        </svg>
+      </a>
+    </div>
+
+    <div class="song-details">
+      <div class="song-name">{{ song['music_name'] }}</div>
+      <div class="artist-name">{{ song['artist'] }}</div>
+    </div>
+  </div>
+{% endfor %}
+    </div>
+  </div>
+</div>
+{% endblock %}
