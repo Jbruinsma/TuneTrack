@@ -1,180 +1,178 @@
-{% extends 'base.html' %} {% block nav %}
+{% extends 'base.html' %}
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+{% endblock %}
+{% block nav %}
 <nav class="navbar" id="viewing-playlist-nav">
-  <ul class="navbar-list">
-    <li class="navbar-item">
-      <a href="/" class="navbar-link">Home</a>
-    </li>
-  </ul>
+   <ul class="navbar-list">
+      <li class="navbar-item">
+         <a href="/playlist/{{ playlist_id }}" class="navbar-link back-link">
+         <span>Back</span>
+         </a>
+      </li>
+   </ul>
 </nav>
-{% endblock %} {% block content %}
+{% endblock %}
+{% block content %}
 <div class="playlist-box-holder viewing-playlist">
-  <div class="playlist-box viewing-playlist playing-playlist">
-    <img src="" alt="Playlist cover image" class="playlist-image" />
-    <div class="details">
-      <h3>NULL</h3>
-      <p>NULL</p>
-    </div>
-
-    <!-- Move the custom slider input into the slider div -->
-    <div class="slider">
-        <label for="progressBar"></label><input id="progressBar" type="range" min="0" value="0" step="1" />
-    </div>
-
-    <div class="control-box">
-      <!-- Hidden audio player -->
-      <audio id="audioPlayer" class="hidden controls">
-   <source src="" type="audio/mpeg" />
-   Your browser does not support the audio element.
-</audio>
-      <div class="control-left">
-        <!-- Back icon -->
-        <button class="control-btn bl">
-          <svg
+   <div class="playlist-box viewing-playlist playing-playlist">
+      <img src="" alt="Playlist cover image" class="playlist-image" />
+      <div class="details">
+         <h3>NULL</h3>
+         <p>NULL</p>
+      </div>
+      <!-- Move the custom slider input into the slider div -->
+      <div class="slider">
+         <label for="progressBar"></label><input id="progressBar" type="range" min="0" value="0" step="1" />
+      </div>
+      <div class="control-box">
+         <!-- Hidden audio player -->
+         <audio id="audioPlayer" class="hidden controls">
+            <source src="" type="audio/mpeg" />
+            Your browser does not support the audio element.
+         </audio>
+         <div class="control-left">
+            <!-- Back icon -->
+            <button class="control-btn bl">
+               <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  class="size-6"
+                  >
+                  <path
+                     stroke-linecap="round"
+                     stroke-linejoin="round"
+                     d="m18.75 4.5-7.5 7.5 7.5 7.5m-6-15L5.25 12l7.5 7.5"
+                     />
+               </svg>
+            </button>
+         </div>
+         <div class="control-center">
+            <!-- Custom Play/Pause Button -->
+            <button id="customPausePlayButton" data-state="play">
+               <!-- Default to the pause icon -->
+               <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  class="size-6 pauseBtn"
+                  >
+                  <path
+                     stroke-linecap="round"
+                     stroke-linejoin="round"
+                     d="M15.75 5.25v13.5m-7.5-13.5v13.5"
+                     />
+               </svg>
+            </button>
+         </div>
+         <div class="control-right">
+            <!-- Forward icon -->
+            <button class="control-btn br">
+               <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  class="size-6"
+                  >
+                  <path
+                     stroke-linecap="round"
+                     stroke-linejoin="round"
+                     d="m5.25 4.5 7.5 7.5-7.5 7.5m6-15 7.5 7.5-7.5 7.5"
+                     />
+               </svg>
+            </button>
+         </div>
+      </div>
+      <div class="audio-control">
+         <!-- Left icon for volume down -->
+         <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
             stroke-width="1.5"
             stroke="currentColor"
-            class="size-6"
-          >
+            class="size-6 audio-icon"
+            >
             <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="m18.75 4.5-7.5 7.5 7.5 7.5m-6-15L5.25 12l7.5 7.5"
+               stroke-linecap="round"
+               stroke-linejoin="round"
+               d="M17.25 9.75 19.5 12m0 0 2.25 2.25M19.5 12l2.25-2.25M19.5 12l-2.25 2.25m-10.5-6 4.72-4.72a.75.75 0 0 1 1.28.53v15.88a.75.75 0 0 1-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.009 9.009 0 0 1 2.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75Z"
+               />
+         </svg>
+         <!-- Volume control slider -->
+         <input
+            id="volumeSlider"
+            type="range"
+            min="0"
+            max="1"
+            step="0.01"
+            value="0"
             />
-          </svg>
-        </button>
-      </div>
-
-      <div class="control-center">
-        <!-- Custom Play/Pause Button -->
-        <button id="customPausePlayButton" data-state="play">
-  <!-- Default to the pause icon -->
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    fill="none"
-    viewBox="0 0 24 24"
-    stroke-width="1.5"
-    stroke="currentColor"
-    class="size-6 pauseBtn"
-  >
-    <path
-      stroke-linecap="round"
-      stroke-linejoin="round"
-      d="M15.75 5.25v13.5m-7.5-13.5v13.5"
-    />
-  </svg>
-</button>
-      </div>
-
-      <div class="control-right">
-        <!-- Forward icon -->
-        <button class="control-btn br">
-          <svg
+         <!-- Right icon for volume up -->
+         <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
             stroke-width="1.5"
             stroke="currentColor"
-            class="size-6"
-          >
+            class="size-6 audio-icon"
+            >
             <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="m5.25 4.5 7.5 7.5-7.5 7.5m6-15 7.5 7.5-7.5 7.5"
-            />
-          </svg>
-        </button>
+               stroke-linecap="round"
+               stroke-linejoin="round"
+               d="M19.114 5.636a9 9 0 0 1 0 12.728M16.463 8.288a5.25 5.25 0 0 1 0 7.424M6.75 8.25l4.72-4.72a.75.75 0 0 1 1.28.53v15.88a.75.75 0 0 1-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.009 9.009 0 0 1 2.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75Z"
+               />
+         </svg>
       </div>
-    </div>
-    <div class="audio-control">
-      <!-- Left icon for volume down -->
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke-width="1.5"
-        stroke="currentColor"
-        class="size-6 audio-icon"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          d="M17.25 9.75 19.5 12m0 0 2.25 2.25M19.5 12l2.25-2.25M19.5 12l-2.25 2.25m-10.5-6 4.72-4.72a.75.75 0 0 1 1.28.53v15.88a.75.75 0 0 1-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.009 9.009 0 0 1 2.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75Z"
-        />
-      </svg>
-
-      <!-- Volume control slider -->
-      <input
-        id="volumeSlider"
-        type="range"
-        min="0"
-        max="1"
-        step="0.01"
-        value="0"
-      />
-
-      <!-- Right icon for volume up -->
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke-width="1.5"
-        stroke="currentColor"
-        class="size-6 audio-icon"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          d="M19.114 5.636a9 9 0 0 1 0 12.728M16.463 8.288a5.25 5.25 0 0 1 0 7.424M6.75 8.25l4.72-4.72a.75.75 0 0 1 1.28.53v15.88a.75.75 0 0 1-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.009 9.009 0 0 1 2.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75Z"
-        />
-      </svg>
-    </div>
-    <div class="xtra-ui">
-      <div class="shuffle-piece">
-        <button>
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-shuffle" viewBox="0 0 16 16">
-  <path fill-rule="evenodd" d="M0 3.5A.5.5 0 0 1 .5 3H1c2.202 0 3.827 1.24 4.874 2.418.49.552.865 1.102 1.126 1.532.26-.43.636-.98 1.126-1.532C9.173 4.24 10.798 3 13 3v1c-1.798 0-3.173 1.01-4.126 2.082A9.6 9.6 0 0 0 7.556 8a9.6 9.6 0 0 0 1.317 1.918C9.828 10.99 11.204 12 13 12v1c-2.202 0-3.827-1.24-4.874-2.418A10.6 10.6 0 0 1 7 9.05c-.26.43-.636.98-1.126 1.532C4.827 11.76 3.202 13 1 13H.5a.5.5 0 0 1 0-1H1c1.798 0 3.173-1.01 4.126-2.082A9.6 9.6 0 0 0 6.444 8a9.6 9.6 0 0 0-1.317-1.918C4.172 5.01 2.796 4 1 4H.5a.5.5 0 0 1-.5-.5"/>
-  <path d="M13 5.466V1.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384l-2.36 1.966a.25.25 0 0 1-.41-.192m0 9v-3.932a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384l-2.36 1.966a.25.25 0 0 1-.41-.192"/>
-</svg>
-        </button>
+      <div class="xtra-ui">
+         <div class="shuffle-piece">
+            <button>
+               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-shuffle" viewBox="0 0 16 16">
+                  <path fill-rule="evenodd" d="M0 3.5A.5.5 0 0 1 .5 3H1c2.202 0 3.827 1.24 4.874 2.418.49.552.865 1.102 1.126 1.532.26-.43.636-.98 1.126-1.532C9.173 4.24 10.798 3 13 3v1c-1.798 0-3.173 1.01-4.126 2.082A9.6 9.6 0 0 0 7.556 8a9.6 9.6 0 0 0 1.317 1.918C9.828 10.99 11.204 12 13 12v1c-2.202 0-3.827-1.24-4.874-2.418A10.6 10.6 0 0 1 7 9.05c-.26.43-.636.98-1.126 1.532C4.827 11.76 3.202 13 1 13H.5a.5.5 0 0 1 0-1H1c1.798 0 3.173-1.01 4.126-2.082A9.6 9.6 0 0 0 6.444 8a9.6 9.6 0 0 0-1.317-1.918C4.172 5.01 2.796 4 1 4H.5a.5.5 0 0 1-.5-.5"/>
+                  <path d="M13 5.466V1.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384l-2.36 1.966a.25.25 0 0 1-.41-.192m0 9v-3.932a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384l-2.36 1.966a.25.25 0 0 1-.41-.192"/>
+               </svg>
+            </button>
+         </div>
+         <div class="loop-piece">
+            <button>
+               <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  class="size-6"
+                  >
+                  <path
+                     stroke-linecap="round"
+                     stroke-linejoin="round"
+                     d="M19.5 12c0-1.232-.046-2.453-.138-3.662a4.006 4.006 0 0 0-3.7-3.7 48.678 48.678 0 0 0-7.324 0 4.006 4.006 0 0 0-3.7 3.7c-.017.22-.032.441-.046.662M19.5 12l3-3m-3 3-3-3m-12 3c0 1.232.046 2.453.138 3.662a4.006 4.006 0 0 0 3.7 3.7 48.656 48.656 0 0 0 7.324 0 4.006 4.006 0 0 0 3.7-3.7c.017-.22.032-.441.046-.662M4.5 12l3 3m-3-3-3 3"></path>
+               </svg>
+            </button>
+         </div>
       </div>
-      <div class="loop-piece">
-        <button>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke-width="1.5"
-            stroke="currentColor"
-            class="size-6"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M19.5 12c0-1.232-.046-2.453-.138-3.662a4.006 4.006 0 0 0-3.7-3.7 48.678 48.678 0 0 0-7.324 0 4.006 4.006 0 0 0-3.7 3.7c-.017.22-.032.441-.046.662M19.5 12l3-3m-3 3-3-3m-12 3c0 1.232.046 2.453.138 3.662a4.006 4.006 0 0 0 3.7 3.7 48.656 48.656 0 0 0 7.324 0 4.006 4.006 0 0 0 3.7-3.7c.017-.22.032-.441.046-.662M4.5 12l3 3m-3-3-3 3"
-            />
-          </svg>
-        </button>
-      </div>
-    </div>
-  </div>
+   </div>
 </div>
-
 <script>
-const audioElement = document.getElementById('audioPlayer')
-  const audioSource = audioElement.querySelector('source');
-  const slider = document.getElementById('progressBar');
+   const audioElement = document.getElementById('audioPlayer')
+     const audioSource = audioElement.querySelector('source');
+     const slider = document.getElementById('progressBar');
 
-  let musicPieceId = 0;
-  let playlistValueCounter = 0;
+     let musicPieceId = 0;
+     let playlistValueCounter = 0;
 
-  const playlistLen = {{ playlist_len }};
-  let playlistId = {{ playlist_id }};
-  let startingIndex = "{{ index }}";
+     const playlistLen = {{ playlist_len }};
+     let playlistId = {{ playlist_id }};
+     let startingIndex = "{{ index }}";
 
-let firstLoad = true;
+   let firstLoad = true;
 </script>
-
 <script src="{{ url_for('static', filename='playlistControl.js') }}"></script>
 {% endblock %}
