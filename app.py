@@ -108,11 +108,9 @@ def edit_playlist(playlist_id):
     playlist_name = playlist.playlist_name
 
     if edit_form.validate_on_submit():
-        # Update playlist name
         playlist.playlist_name = edit_form.playlist_name.data
 
         if edit_form.playlist_image.data:
-            # Delete the old image if it exists, is not the default image, and belongs to this playlist
             old_image_path = os.path.join(current_app.config['UPLOAD_FOLDER'], playlist.image)
             if os.path.exists(old_image_path) and playlist.image != DEFAULT_IMAGE:
                 os.remove(old_image_path)
@@ -126,7 +124,6 @@ def edit_playlist(playlist_id):
             playlist.image = unique_filename
 
         else:
-            # Keep current image if no new image is uploaded
             playlist.image = request.form.get("current_playlist_image", playlist.image)
 
         playlist.music_order_list.clear()
@@ -141,10 +138,10 @@ def edit_playlist(playlist_id):
         flash("Playlist updated successfully!", "success")
         return redirect(url_for('view_playlist', playlist_id=playlist_id))
 
-    # Render the form with initial values on GET request
     return render_template(
         'editing.html',
         playlist_id=playlist_id,
+        title= f'Editing: {playlist.playlist_name}',
         form=edit_form,
         playlist_image_url=playlist.image,
         playlist_name=playlist_name,
