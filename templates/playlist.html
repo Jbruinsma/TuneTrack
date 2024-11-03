@@ -1,58 +1,84 @@
-{% extends 'base.html' %} {% block nav %}
+{% extends 'base.html' %}
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='playlist.css') }}" />
+{% endblock %}
+{% block nav %}
 <nav class="navbar" id="viewing-playlist-nav">
-  <ul class="navbar-list">
-    <li class="navbar-item">
-      <a href="/" class="navbar-link">Home</a>
-    </li>
-  </ul>
+   <ul class="navbar-list">
+      <li class="navbar-item">
+         <a href="/" class="navbar-link">Home</a>
+      </li>
+      <li class="navbar-item">
+         <div class="options-dropdown">
+            <a class="navbar-link">Options</a> <!-- Styled like a regular link -->
+            <div class="dropdown-content">
+               <a href="/edit_playlist/{{ playlist_id }}">Edit Playlist</a>
+               <!-- Delete Playlist link with onclick to show the modal -->
+               <a href="javascript:void(0);" class="dropdown-item" onclick="showModal()">Delete Playlist</a>
+            </div>
+         </div>
+      </li>
+   </ul>
 </nav>
-{% endblock %} {% block content %}
+{% endblock %}
+{% block content %}
 <div class="playlist-box-holder viewing-playlist">
-  <div class="playlist-box viewing-playlist">
-    <img
-      src="{{ url_for('static', filename='uploads/' + playlist_image) }}"
-      alt="Playlist cover image"
-      class="playlist-image"
-    />
-    <h3>{{ playlist_title }}</h3>
-    <div class="play-shuffle-buttons">
-      <a href="/play/0/{{ playlist_id }}" class="play-button">Play</a>
-      <a href="/shuffle/shuffling/{{ playlist_id }}" class="shuffle-button"
-        >Shuffle</a
-      >
-    </div>
-
-    <div id="song-rows-container">
-      {% for song in music_list %}
-  <div class="song-container" data-name-id="{{ song['music_name'] }} by {{ song['artist'] }}">
-
-    <div class="icon">
-      <a href="/play_specific/{{ loop.index }}/{{ playlist_id }}">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke-width="1.5"
-          stroke="currentColor"
-          class="size-6"
-          id="icon"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.347a1.125 1.125 0 0 1 0 1.972l-11.54 6.347a1.125 1.125 0 0 1-1.667-.986V5.653Z"
-          />
-        </svg>
-      </a>
-    </div>
-
-    <div class="song-details">
-      <div class="song-name">{{ song['music_name'] }}</div>
-      <div class="artist-name">{{ song['artist'] }}</div>
-    </div>
-  </div>
-{% endfor %}
-    </div>
-  </div>
+   <div class="playlist-box viewing-playlist">
+      <img
+         src="{{ url_for('static', filename='uploads/' + playlist_image) }}"
+         alt="Playlist cover image"
+         class="playlist-image"
+         />
+      <h3>{{ playlist_title }}</h3>
+      <div class="play-shuffle-buttons">
+         <a href="/play/0/{{ playlist_id }}" class="play-button">Play</a>
+         <a href="/shuffle/shuffling/{{ playlist_id }}" class="shuffle-button">Shuffle</a>
+      </div>
+      <div id="song-rows-container">
+         {% if music_list %}
+            {% for song in music_list %}
+            <div class="song-container" data-name-id="{{ song.music_name }} by {{ song.music_artist }}">
+               <div class="icon">
+                  <a href="/play_specific/{{ loop.index }}/{{ playlist_id }}">
+                     <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke-width="1.5"
+                        stroke="currentColor"
+                        class="size-6"
+                        id="icon"
+                        >
+                        <path
+                           stroke-linecap="round"
+                           stroke-linejoin="round"
+                           d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.347a1.125 1.125 0 0 1 0 1.972l-11.54 6.347a1.125 1.125 0 0 1-1.667-.986V5.653Z"></path>
+                     </svg>
+                  </a>
+               </div>
+               <div class="song-details">
+                  <div class="song-name">{{ song.music_name }}</div>
+                  <div class="artist-name">{{ song.music_artist }}</div>
+               </div>
+            </div>
+            {% endfor %}
+         {% else %}
+            <!-- Show Add Music button if no songs are present in the playlist -->
+            <div class="no-music">
+               <a href="/edit_playlist/{{ playlist_id }}" class="add-music-button">Add Music</a>
+            </div>
+         {% endif %}
+      </div>
+   </div>
 </div>
+<div id="confirmModal" class="modal hidden">
+   <div class="modal-content">
+      <h3>Confirm you want to delete this playlist</h3>
+      <div class="modal-buttons">
+         <button onclick="confirmDeletion('{{ playlist_id }}')" class="confirm-button">Confirm</button>
+         <button onclick="closeModal()" class="cancel-button">Cancel</button>
+      </div>
+   </div>
+</div>
+<script src="{{ url_for('static', filename='confirmation.js') }}"></script>
 {% endblock %}
