@@ -1,58 +1,88 @@
-{% extends 'base.html' %}{% block content %}
-<div class="form-container">
-  <form
-    id="playlistForm"
-    method="POST"
-    action="{{ url_for('create_playlist') }}"
-    enctype="multipart/form-data"
-  >
-    {{ form.hidden_tag() }}
-    <!-- CSRF token for security if using Flask-WTF -->
-
-    <!-- Playlist Image Upload -->
-    <div class="form-group">
-      <label for="playlistImage"></label>
-      <input
-        type="file"
-        name="playlist_image"
-        id="playlistImage"
-        class="form-control"
-        required
-      />
-    </div>
-
-    <!-- Playlist Name Input -->
-    <div class="form-group">
-      <label for="playlistTitle"></label>
-      <input
-        type="text"
-        name="playlist_name"
-        id="playlistTitle"
-        class="form-control"
-        placeholder="Enter playlist name"
-        required
-      />
-    </div>
-
-    <!-- Available Songs (Checkboxes) -->
-    <div class="form-group">
-      <label>Select Songs:</label>
-      {% if available_music %} {% for key, music in available_music.items() %}
-      <div class="music-row">
-        <label>
-          <input type="checkbox" name="selected_music" value="{{ key }}" />
-          {{ music.music_name }} by {{ music.artist }}
-        </label>
+{% extends 'base.html' %}
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='creatingEditingPlaylist.css') }}" />
+{% endblock %}
+{% block nav %}
+<nav class="navbar">
+   <ul class="navbar-list">
+      <li class="navbar-item">
+         <a href="/" class="navbar-link">Home</a>
+      </li>
+   </ul>
+</nav>
+{% endblock %}{% block content %}
+<div class="form-wrapper">
+   <div class="form-center">
+      <h3>Your Playlist</h3>
+      <div class="form-container">
+         <form
+            id="playlistForm"
+            method="POST"
+            action="{{ url_for('create_playlist') }}"
+            enctype="multipart/form-data"
+            >
+            {{ form.hidden_tag() }}
+            <!-- CSRF token for security if using Flask-WTF -->
+            <!-- Hidden input for chosen music pieces -->
+            <input type="hidden" name="chosen_music_pieces" id="chosenMusicPieces" value="">
+            <!-- Playlist Image Upload -->
+            <div class="form-group">
+               <label for="playlistImage"></label>
+               <div class="image-upload-box" onclick="document.getElementById('playlistImage').click();">
+                  <img id="imagePreview" style="display: none;" />
+                  <div class="upload-placeholder" id="placeholderText"></div>
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="upload-icon">
+                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"></path>
+                  </svg>
+               </div>
+               <input type="file" name="playlist_image" id="playlistImage" accept="image/*" />
+            </div>
+            <!-- Playlist Name Input -->
+            <div class="form-group">
+               <label for="playlistTitle"></label>
+               <input
+                  type="text"
+                  name="playlist_name"
+                  id="playlistTitle"
+                  class="form-control"
+                  placeholder="Enter playlist name"
+                  required
+                  />
+            </div>
+            <!-- Added Music Section -->
+            <div class="form-group pieces-in-playlist">
+               <p>Added Music:</p>
+            </div>
+            <!-- Submit Button -->
+            <div class="form-group form-group-button">
+               <button type="submit" class="btn btn-primary">Create Playlist</button>
+            </div>
+         </form>
       </div>
-      {% endfor %} {% else %}
-      <p>No music available to select.</p>
+   </div>
+   <!-- Available Music Section -->
+   <div class="Available-music">
+      <h3>Available Music</h3>
+      {% if available_music %}
+      {% for key, music in available_music.items() %}
+      <div class="music-row" data-id="{{ key }}">
+         <div class="music-row-piece-button">
+            <button type="button">
+               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6 plus-icon">
+                  <path fill-rule="evenodd" d="M12 3.75a.75.75 0 0 1 .75.75v6.75h6.75a.75.75 0 0 1 0 1.5h-6.75v6.75a.75.75 0 0 1-1.5 0v-6.75H4.5a.75.75 0 0 1 0-1.5h6.75V4.5a.75.75 0 0 1 .75-.75Z" clip-rule="evenodd"></path>
+               </svg>
+            </button>
+         </div>
+         <div class="music-row-piece-info">
+            <h5>{{ music.music_name }}</h5>
+            <p>{{ music.artist }}</p>
+         </div>
+      </div>
+      {% endfor %}
+      {% else %}
+      <p class="no-music-placeholder">No music available to select.</p>
       {% endif %}
-    </div>
-
-    <!-- Submit Button -->
-    <div class="form-group">
-      <button type="submit" class="btn btn-primary">Create Playlist</button>
-    </div>
-  </form>
+   </div>
 </div>
+<script src="{{ url_for('static', filename='playlistCreation.js') }}"></script>
 {% endblock %}
