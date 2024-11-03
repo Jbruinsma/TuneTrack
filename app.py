@@ -62,37 +62,30 @@ def create_playlist():
     form = PlaylistForm()
 
     if form.validate_on_submit():
-        # Retrieve the list of chosen music pieces from the hidden input
         chosen_music_pieces = request.form.get("chosen_music_pieces", "")
         selected_music = chosen_music_pieces.split(",") if chosen_music_pieces else []
 
-        # Retrieve playlist title
         playlist_title = form.playlist_name.data
 
-        # Retrieve and save the image file with a unique filename
         file = request.files['playlist_image']
         if file and allowed_file(file.filename):
             original_filename = secure_filename(file.filename)
-            unique_filename = f"{uuid.uuid4().hex}_{original_filename}"  # Generate a unique filename
+            unique_filename = f"{uuid.uuid4().hex}_{original_filename}"
             file_path = os.path.join(app.config['UPLOAD_FOLDER'], unique_filename)
-            file.save(file_path)  # Save the image file to the specified path
+            file.save(file_path)
         else:
-            # Set the unique_filename to the default image if no file is uploaded
-            unique_filename = "DefaultPlaylistCover.png"  # Make sure this file exists in the uploads folder
+            unique_filename = "DefaultPlaylistCover.png"
 
-        # Store the unique filename in the Playlist object
         new_playlist = Playlist(image=unique_filename, name=playlist_title)
 
-        # Add selected music to the playlist, if any
         new_playlist.music_list.clear()
         for value in selected_music:
             new_playlist.music_order_list.append(value)
             new_playlist.music_list.append(add_music_pieces(value))
 
-        # Add the new playlist to the manager
         playlistManager.playlists.append(new_playlist)
 
-        return redirect(url_for('load_content'))  # Redirect to a success or content page
+        return redirect(url_for('load_content'))
 
     return render_template('createPlaylist.html', title='Create Playlist', form=form, available_music=available_music)
 @app.route('/edit_playlist/<int:playlist_id>', methods=['GET', 'POST'])
@@ -112,34 +105,30 @@ def edit_playlist(playlist_id):
     playlist_music_pieces = playlist.music_list
     available_music_to_user = create_available_music_dict()
 
-    playlist_image = playlist.image
     playlist_name = playlist.playlist_name
 
     if edit_form.validate_on_submit():
         # Update playlist name
         playlist.playlist_name = edit_form.playlist_name.data
 
-        # Handle new image upload, ensuring unique filename and safe deletion
         if edit_form.playlist_image.data:
             # Delete the old image if it exists, is not the default image, and belongs to this playlist
             old_image_path = os.path.join(current_app.config['UPLOAD_FOLDER'], playlist.image)
             if os.path.exists(old_image_path) and playlist.image != DEFAULT_IMAGE:
                 os.remove(old_image_path)
 
-            # Save the new image with a unique filename using playlist_id
             image_file = edit_form.playlist_image.data
             original_filename = secure_filename(image_file.filename)
             unique_filename = f"{playlist_id}_{original_filename}"
             image_path = os.path.join(current_app.config['UPLOAD_FOLDER'], unique_filename)
 
             image_file.save(image_path)
-            playlist.image = unique_filename  # Store only the unique filename
+            playlist.image = unique_filename
 
         else:
             # Keep current image if no new image is uploaded
             playlist.image = request.form.get("current_playlist_image", playlist.image)
 
-        # Update the playlist's music list
         playlist.music_order_list.clear()
         playlist.music_list.clear()
         chosen_music_pieces = request.form.get("chosen_music_pieces", "")
@@ -245,7 +234,6 @@ def update_value_list():
     temp_list = data.get('tempValueList')
     new_list =  validate_value_list() + playlistManager.piece_id_value_list
     playlistManager.piece_id_value_list = new_list
-    print(f"VALUE LIST: {playlistManager.piece_id_value_list}")
     return jsonify(playlistManager.piece_id_value_list)
 
 @app.route('/api/get/value_list')
@@ -259,3 +247,4 @@ def unshuffle_playlist(index, playlist_id):
 
 if __name__ == '__main__':
     app.run(debug=True)
+    
