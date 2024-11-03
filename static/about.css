@@ -1,0 +1,26 @@
+.about-content {
+    text-align: center;
+}
+
+.about-content p {
+    line-height: 1.62;
+}
+
+.contact-list {
+    list-style: none;
+    padding: 0;
+    margin: 10px 0;
+}
+
+.contact-list li {
+    margin: 10px 0;
+}
+
+.contact-list a {
+    color: #ffd700;
+    text-decoration: none;
+}
+
+.contact-list a:hover {
+    text-decoration: underline;
+}
